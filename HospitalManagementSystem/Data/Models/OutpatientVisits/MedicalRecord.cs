@@ -9,6 +9,8 @@ namespace HospitalManagementSystem.Data.Models.OutpatientVisits
         public int PatientId { get; set; }
         public int DoctorId { get; set; }
         public int AppointmentId { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
         public DateTime CreatedAt { get; set; }
         public string Diagnosis { get; set; }
         public Patient Patient { get; set; }

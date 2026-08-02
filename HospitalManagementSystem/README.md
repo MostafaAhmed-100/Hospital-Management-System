@@ -14,38 +14,44 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 - [Architecture & Design Patterns](#️-architecture--design-patterns)
 - [Technology Stack](#️-technology-stack)
 - [Getting Started](#️-getting-started)
+- [Roadmap — Planned Updates through V3](#️-roadmap--planned-updates-through-v3)
 - [Contributors](#-contributors)
+- [Mentorship](#-mentorship)
 
 ## 🚀 Features & Modules (V1)
 
-The current version (V1) targets the foundational modules required for daily hospital workflows.
+The first version (V1) is complete: every foundational module needed for daily hospital workflows is live, behind a fully decoupled architecture and secure RESTful endpoints.
 
-### ✅ Done so far
-- **Data layer** — Full EF Core entity models for every V1 module, organized by feature folder:
+### ✅ Completed in V1
+
+- **Data Layer** — Full EF Core entity models for every module, organized by feature folder:
   - **Clinics & Doctors** — `Clinic`, `Department`, `Doctor`, `Specialty`
   - **Outpatient Visits** — `Patient`, `Appointment`, `MedicalRecord`
   - **Pharmacy** — `Medicine`, `Pharmacy`, `PharmacyInventory`, `Prescription`, `PrescriptionItem`, `PharmacySale`, `SaleItem`
   - **Billing & Insurance** — `InsuranceProvider`, `Invoice`, `Payment`
-  - **Enums** — `AppointmentStatus`, `ClinicType`, `DoctorType`, `InvoiceStatus`, `PrescriptionStatus`
-  - **Identity** — `ApplicationUser`
-- **Fluent API configuration** — Full `IEntityTypeConfiguration<T>` set for every entity above, wired into `AppDbContext`.
+  - **Enums & Identity** — Standardized enums (`AppointmentStatus`, `ClinicType`, `DoctorType`, `InvoiceStatus`, `PrescriptionStatus`) and ASP.NET Core Identity wired to `ApplicationUser`.
+- **Fluent API & Soft Deletion** — Full `IEntityTypeConfiguration<T>` set for every entity, equipped with global query filters for `IsDeleted` to ensure non-destructive record management.
 - **Repository & Unit of Work** — `GenericRepository` + `SpecificRepositories`, wired behind `IUnitOfWork` for transactional `SaveChanges`.
-
-### 🚧 Still needed to close out V1
-- **Controllers/endpoints** — REST endpoints for all four modules (Clinics & Doctors, Outpatient Visits, Pharmacy, Billing & Insurance).
-- **Service layer** — Business logic and validation sitting between controllers and the Unit of Work.
-- **DTOs & AutoMapper/mapping** — Request/response shaping so entities aren't exposed directly through the API.
-- **Auth** — ASP.NET Core Identity wired to `ApplicationUser`, linked to doctors and patients, with role-based authorization.
-- **API docs** — Swagger/OpenAPI (currently disabled due to the .NET 10.0.10 bug).
+- **Service Layer & DTOs** — Business logic encapsulation using AutoMapper for entity-DTO transformations and a unified `ApiResponseDto` wrapper for all responses with pagination support.
+- **Robust Validation** — Global validation filters powered by FluentValidation (featuring localized Arabic error messages).
+- **Controllers & Rate Limiting** — Fully implemented CRUD REST endpoints protected by intelligent rate limiting policies (Standard for queries, Strict for mutations).
+- **Error Handling & Logging** — Centralized `ExceptionMiddleware` and structured, queryable logging powered by Serilog.
+- **API Documentation** — Swagger/OpenAPI UI fully configured and enabled for seamless testing.
 
 ## 🏗️ Architecture & Design Patterns
 
-The project emphasizes maintainability, scalability, and testability through enterprise-level design patterns:
+The project emphasizes maintainability, scalability, and testability through enterprise-level design patterns, applied consistently across every layer:
 
-- **Repository Pattern** — A `GenericRepository` handles standard CRUD operations to keep the codebase DRY, complemented by `SpecificRepositories` for complex, domain-specific queries (e.g. `Include`, `AsSplitQuery`).
-- **Unit of Work Pattern** — Centralized transaction management ensuring data integrity across multiple repository operations through a single `SaveChanges` context.
-- **Dependency Injection (DI)** — Decoupled architecture, injecting interfaces (e.g. `IUnitOfWork`) rather than concrete implementations.
-- **Performance Optimization** — Strategic use of `AsNoTracking`, `AsNoTrackingWithIdentityResolution`, and explicit query splitting (`AsSplitQuery`) to prevent Cartesian explosions and reduce memory overhead.
+- **Clean Architecture Separation** — Strict boundaries between Controllers → Services → Repositories, each with a single responsibility and independently testable.
+- **Repository & Unit of Work Pattern** — `GenericRepository` handles standard CRUD to keep the codebase DRY, complemented by `SpecificRepositories` for complex domain queries (e.g. `Include`, `AsSplitQuery`). All repositories are wired behind `IUnitOfWork` so a single `SaveChanges` call commits multi-repository operations atomically. Newly added repository interfaces/implementations cover `PharmacySale`, `PrescriptionItem`, and `SaleItem`, registered directly in `UnitOfWork`.
+- **Dependency Injection (DI)** — Fully decoupled architecture; controllers and services depend on interfaces (`IUnitOfWork`, service interfaces, repository interfaces) rather than concrete implementations.
+- **Service Layer & DTO Mapping** — Business logic lives in dedicated services, not controllers. AutoMapper profiles handle entity ↔ DTO transformation, including paged results and nested detail DTOs, all returned through a unified `ApiResponseDto` wrapper.
+- **Validation Pipeline** — A global `ValidationFilter` runs FluentValidation validators before a request reaches the service layer, short-circuiting invalid requests with structured, localized (Arabic) error messages instead of scattering `if` checks across controllers.
+- **Soft Deletion** — Every entity carries an `IsDeleted` flag enforced through EF Core global query filters, so deleted records are automatically excluded from queries without needing to filter manually at each call site. A dedicated EF Core migration introduces the `IsDeleted` columns and updates the model snapshot accordingly.
+- **Global Exception Handling** — A centralized `ExceptionMiddleware` catches unhandled exceptions anywhere in the pipeline and converts them into consistent, structured error responses instead of leaking stack traces.
+- **Structured Logging** — Serilog is wired into the service layer and middleware, producing structured, queryable log events (rather than plain text) for easier debugging and monitoring in production.
+- **Performance Optimization** — Strategic use of `AsNoTracking`, `AsNoTrackingWithIdentityResolution`, and explicit query splitting (`AsSplitQuery`) to prevent Cartesian explosions and reduce memory overhead on read-heavy endpoints.
+- **Rate Limiting** — Endpoint-level policies distinguish read traffic (Standard policy) from write traffic (Strict policy) to protect the API from abuse without throttling normal browsing.
 
 ## 🛠️ Technology Stack
 
@@ -55,7 +61,9 @@ The project emphasizes maintainability, scalability, and testability through ent
 | Language | C# |
 | ORM | Entity Framework Core |
 | Database | Microsoft SQL Server |
+| Mapping & Validation | AutoMapper, FluentValidation |
 | Auth | ASP.NET Core Identity |
+| Logging | Serilog |
 | API Docs | Swagger / OpenAPI |
 
 ## ⚙️ Getting Started
@@ -89,7 +97,7 @@ The project emphasizes maintainability, scalability, and testability through ent
    ```powershell
    Update-Database
    ```
-   *(This automatically creates the `HospitalDB_V1` database and applies all schema tables.)*
+   *(This automatically creates the `HospitalDB_V1` database and applies all schema tables, including the Soft Delete `IsDeleted` columns.)*
 
 4. **Run the application:**
 
@@ -126,11 +134,12 @@ This is V1. The plan is to extend the system in two more versions, each a comple
 
 ## 🙏 Mentorship
 
-Special thanks to the following mentor for their guidance throughout this project:
+Special thanks to the following mentors for their valuable guidance and technical mentorship throughout this project:
 
 | Name | LinkedIn |
 |---|---|
 | **AbdALlatif Hossni** | [linkedin.com/in/abdallatif-hossni](https://linkedin.com/in/abdallatif-hossni) |
+| **Omar Ahmed** | ADD_LINKEDIN_URL_HERE |
 
 ## 📄 License
 

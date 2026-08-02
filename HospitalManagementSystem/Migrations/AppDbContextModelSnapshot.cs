@@ -114,6 +114,9 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int>("CoveragePercentage")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("ProviderName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -201,6 +204,9 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -249,6 +255,9 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int>("DoctorType")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("SpecialtyId")
                         .HasColumnType("int");
 
@@ -268,6 +277,9 @@ namespace HospitalManagementSystem.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -294,6 +306,9 @@ namespace HospitalManagementSystem.Migrations
 
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
@@ -333,6 +348,9 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.Property<int>("PatientId")
                         .HasColumnType("int");
 
@@ -363,6 +381,9 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int?>("InsuranceId")
                         .HasColumnType("int");
 
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
+
                     b.HasKey("Id");
 
                     b.HasIndex("InsuranceId");
@@ -377,6 +398,9 @@ namespace HospitalManagementSystem.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()

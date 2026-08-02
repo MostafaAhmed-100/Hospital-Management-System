@@ -8,6 +8,8 @@ namespace HospitalManagementSystem.Data.Models.OutpatientVisits
         public int Id { get; set; }
         public int? InsuranceId { get; set; }
         public string FullName { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
         public InsuranceProvider? InsuranceProvider { get; set; }
         public ICollection<Appointment> Appointments { get; set; }
         public ICollection<MedicalRecord> MedicalRecords{ get; set; }

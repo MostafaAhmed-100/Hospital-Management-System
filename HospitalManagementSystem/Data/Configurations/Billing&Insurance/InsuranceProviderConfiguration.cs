@@ -15,6 +15,7 @@ namespace HospitalManagementSystem.Data.Configurations.Billing_Insurance
                    .HasForeignKey(p => p.InsuranceId)
                    .IsRequired(false)
                    .OnDelete(DeleteBehavior.SetNull);
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

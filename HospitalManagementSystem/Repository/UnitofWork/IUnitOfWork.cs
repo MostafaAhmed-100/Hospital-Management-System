@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using HospitalManagementSystem.Repository.SpecificRepositories.AppointmentRepository;
+﻿using HospitalManagementSystem.Repository.SpecificRepositories.AppointmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.ClinicRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DepartmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DoctorRepository;
@@ -11,15 +10,22 @@ using HospitalManagementSystem.Repository.SpecificRepositories.PatientRepository
 using HospitalManagementSystem.Repository.SpecificRepositories.PaymentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacyInventoryRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacyRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PharmacySaleRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PrescriptionItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PrescriptionRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.SaleItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SpecialtyRepository;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HospitalManagementSystem.Repository.UnitofWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        ISaleItemRepository SaleItems { get; }
+        IPrescriptionItemRepository PrescriptionItems { get; }
         IAppointmentRepository Appointments { get; }
         IClinicRepository Clinics { get; }
+        IPharmacySaleRepository PharmacySales { get; }
         IDepartmentRepository Departments { get; }
         IDoctorRepository Doctors { get; }
         IInsuranceProviderRepository InsuranceProviders { get; }

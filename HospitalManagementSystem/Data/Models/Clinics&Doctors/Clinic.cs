@@ -8,6 +8,8 @@ namespace HospitalManagementSystem.Data.Models.Clinics_Doctors
         public int Id { get; set; }
         public int DepartmentId { get; set; }
         public string Name { get; set; }
+        public bool IsDeleted { get; set; } = false;
+
         public ClinicType ClinicType { get; set; }
         public Department Department { get; set; }
         public ICollection<Appointment> Appointments { get; set; }

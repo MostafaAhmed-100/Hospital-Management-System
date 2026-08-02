@@ -14,6 +14,8 @@ namespace HospitalManagementSystem.Data.Configurations.Clinics_Doctors
                    .WithOne(d => d.Specialty)
                    .HasForeignKey(d => d.SpecialtyId)
                    .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

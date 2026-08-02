@@ -12,6 +12,8 @@ namespace HospitalManagementSystem.Data.Configurations.Pharmacys
 
             builder.Property(m => m.UnitPrice)
                    .HasColumnType("decimal(18,2)");
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

@@ -18,6 +18,8 @@ namespace HospitalManagementSystem.Data.Configurations.Clinics_Doctors
                    .HasForeignKey(d => d.DepartmentId)
                    .OnDelete(DeleteBehavior.Restrict);
 
+            builder.HasQueryFilter(x => !x.IsDeleted);
+
             builder.HasOne(d => d.Specialty)
                    .WithMany(s => s.Doctors)
                    .HasForeignKey(d => d.SpecialtyId)

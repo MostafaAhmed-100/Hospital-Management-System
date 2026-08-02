@@ -9,6 +9,7 @@ namespace HospitalManagementSystem.Data.Models.Clinics_Doctors
         public int Id { get; set; }
         public int DepartmentId { get; set; }
         public int SpecialtyId { get; set; }
+        public bool IsDeleted { get; set; } = false;
         public DoctorType DoctorType { get; set; }
         public Decimal ConsultationFee { get; set; }
         public Department Department { get; set; }

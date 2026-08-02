@@ -19,6 +19,8 @@ namespace HospitalManagementSystem.Data.Configurations.Pharmacys
                    .WithOne(i => i.Pharmacy)
                    .HasForeignKey(i => i.PharmacyId)
                    .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasQueryFilter(x => !x.IsDeleted);
         }
     }
 }

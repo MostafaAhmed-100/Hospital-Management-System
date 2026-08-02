@@ -10,6 +10,8 @@ namespace HospitalManagementSystem.Data.Configurations.Clinics_Doctors
         {
             builder.HasKey(d => d.Id);
 
+            builder.HasQueryFilter(x => !x.IsDeleted);
+
             builder.HasMany(d => d.Clinics)
                    .WithOne(c => c.Department)
                    .HasForeignKey(c => c.DepartmentId)

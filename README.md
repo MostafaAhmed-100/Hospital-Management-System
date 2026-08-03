@@ -139,7 +139,7 @@ Special thanks to the following mentors for their valuable guidance and technica
 | Name | LinkedIn |
 |---|---|
 | **AbdALlatif Hossni** | [linkedin.com/in/abdallatif-hossni](https://linkedin.com/in/abdallatif-hossni) |
-| **Omar Ahmed** | ADD_LINKEDIN_URL_HERE |
+
 
 ## 📄 License
 

@@ -11,6 +11,7 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 ## 📋 Table of Contents
 
 - [Features & Modules (V1)](#-features--modules-v1)
+- [V2 — In Progress](#-v2--in-progress)
 - [Architecture & Design Patterns](#️-architecture--design-patterns)
 - [Technology Stack](#️-technology-stack)
 - [Getting Started](#️-getting-started)
@@ -20,7 +21,7 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 
 ## 🚀 Features & Modules (V1)
 
-The first version (V1) is complete: every foundational module needed for daily hospital workflows is live, behind a fully decoupled architecture and secure RESTful endpoints.
+> **✅ V1 Status: Complete.** All four core modules (Clinics & Doctors, Outpatient Visits, Pharmacy, Billing & Insurance) are fully implemented end to end — from the data layer through Controllers — and production-ready with logging, validation, and error handling in place.
 
 ### ✅ Completed in V1
 
@@ -38,16 +39,35 @@ The first version (V1) is complete: every foundational module needed for daily h
 - **Error Handling & Logging** — Centralized `ExceptionMiddleware` and structured, queryable logging powered by Serilog.
 - **API Documentation** — Swagger/OpenAPI UI fully configured and enabled for seamless testing.
 
+## 🏥 V2 — In Progress
+
+> **🚧 V2 Status: Data layer complete.** Domain models, EF Core configurations, and repositories for hospital operations are in place. Service layer, DTOs, validation, and controllers are still to come.
+
+### ✅ Done so far
+
+- **Domain Models** — `Admission`, `Bed`, `Room`, `ERVisit`, `Staff`, `Surgery`, plus supporting enums for statuses/roles.
+- **Fluent API Configuration** — `IEntityTypeConfiguration<T>` set for every new V2 entity.
+- **Repository & Unit of Work** — Repository pattern implemented for all new entities; `AppDbContext` and `UnitOfWork` updated to expose them.
+- **Nursing Module** — `Nurse` and `NurseAssignment` entities. Nurses modeled as a specialization of staff via a link to the `Staff` table; `NurseAssignment` tracks nurse coverage per shift, tied to either an `Admission` or an `ERVisit`. Both entities are configured via Fluent API, added to `AppDbContext`, and wired behind `UnitOfWork`.
+
+### 🚧 Still needed to close out V2
+
+- **DTOs & AutoMapper profiles** for the new entities.
+- **FluentValidation validators** for admission/ER/surgery/nursing business rules (e.g. bed conflict checks, OR overlap checks, triage-level constraints, shift assignment conflicts).
+- **Service layer** — business logic (e.g. "a bed can't hold two active admissions", "no overlapping surgeries per OR", triage-priority queueing).
+- **Controllers** — CRUD + workflow endpoints (admit patient, discharge, log ER visit, escalate to admission, schedule surgery, assign surgical team, assign nurse to shift).
+- **Migration** — EF Core migration for all new V2 tables.
+
 ## 🏗️ Architecture & Design Patterns
 
 The project emphasizes maintainability, scalability, and testability through enterprise-level design patterns, applied consistently across every layer:
 
 - **Clean Architecture Separation** — Strict boundaries between Controllers → Services → Repositories, each with a single responsibility and independently testable.
-- **Repository & Unit of Work Pattern** — `GenericRepository` handles standard CRUD to keep the codebase DRY, complemented by `SpecificRepositories` for complex domain queries (e.g. `Include`, `AsSplitQuery`). All repositories are wired behind `IUnitOfWork` so a single `SaveChanges` call commits multi-repository operations atomically. Newly added repository interfaces/implementations cover `PharmacySale`, `PrescriptionItem`, and `SaleItem`, registered directly in `UnitOfWork`.
+- **Repository & Unit of Work Pattern** — `GenericRepository` handles standard CRUD to keep the codebase DRY, complemented by `SpecificRepositories` for complex domain queries (e.g. `Include`, `AsSplitQuery`). All repositories are wired behind `IUnitOfWork` so a single `SaveChanges` call commits multi-repository operations atomically. Repository interfaces/implementations now also cover the V2 entities (`Admission`, `Bed`, `Room`, `ERVisit`, `Staff`, `Surgery`), registered directly in `UnitOfWork`.
 - **Dependency Injection (DI)** — Fully decoupled architecture; controllers and services depend on interfaces (`IUnitOfWork`, service interfaces, repository interfaces) rather than concrete implementations.
 - **Service Layer & DTO Mapping** — Business logic lives in dedicated services, not controllers. AutoMapper profiles handle entity ↔ DTO transformation, including paged results and nested detail DTOs, all returned through a unified `ApiResponseDto` wrapper.
 - **Validation Pipeline** — A global `ValidationFilter` runs FluentValidation validators before a request reaches the service layer, short-circuiting invalid requests with structured, localized (Arabic) error messages instead of scattering `if` checks across controllers.
-- **Soft Deletion** — Every entity carries an `IsDeleted` flag enforced through EF Core global query filters, so deleted records are automatically excluded from queries without needing to filter manually at each call site. A dedicated EF Core migration introduces the `IsDeleted` columns and updates the model snapshot accordingly.
+- **Soft Deletion** — Every entity carries an `IsDeleted` flag enforced through EF Core global query filters, so deleted records are automatically excluded from queries without needing to filter manually at each call site.
 - **Global Exception Handling** — A centralized `ExceptionMiddleware` catches unhandled exceptions anywhere in the pipeline and converts them into consistent, structured error responses instead of leaking stack traces.
 - **Structured Logging** — Serilog is wired into the service layer and middleware, producing structured, queryable log events (rather than plain text) for easier debugging and monitoring in production.
 - **Performance Optimization** — Strategic use of `AsNoTracking`, `AsNoTrackingWithIdentityResolution`, and explicit query splitting (`AsSplitQuery`) to prevent Cartesian explosions and reduce memory overhead on read-heavy endpoints.
@@ -105,15 +125,15 @@ The project emphasizes maintainability, scalability, and testability through ent
 
 ## 🗺️ Roadmap — Planned Updates through V3
 
-This is V1. The plan is to extend the system in two more versions, each a complete, demoable milestone on its own.
+V1 is complete and V2 data-layer work is underway. The plan is to finish V2, then move to V3, each a complete, demoable milestone on its own.
 
-### 🔜 V2 — Hospital Operations
+### 🏥 V2 — Hospital Operations *(in progress — see above)*
 *Inpatient admission, emergency, surgery, and nursing.*
 
-- **🛏️ Inpatient Admission** — `Rooms`, `Beds`, `Admissions`. A bed holds at most one active admission at a time; cost accrues daily and settles at discharge.
-- **🚑 Emergency (ER)** — `ER_Visits` with a 5-level triage queue (priority first, arrival time second); can escalate directly into a full admission.
-- **🔪 Surgery** — `OperatingRooms`, `Surgeries`, `SurgeryTeam`. No overlapping bookings per operating room; many-to-many surgical team with a role per participant.
-- **👩‍⚕️ Nursing** — `Nurses`, `NurseAssignments`. Nurses modeled as a specialization of staff, with assignments tracked against admissions and ER visits per shift.
+- **🛏️ Inpatient Admission** — `Room`, `Bed`, `Admission`. A bed holds at most one active admission at a time; cost accrues daily and settles at discharge.
+- **🚑 Emergency (ER)** — `ERVisit` with a 5-level triage queue (priority first, arrival time second); can escalate directly into a full admission.
+- **🔪 Surgery** — `OperatingRoom`, `Surgery`, `SurgeryTeam`, `Staff`. No overlapping bookings per operating room; many-to-many surgical team with a role per participant.
+- **👩‍⚕️ Nursing** — `Nurse`, `NurseAssignment` ✅ *done*. Nurses modeled as a specialization of staff, with assignments tracked against admissions and ER visits per shift.
 
 ### 🔮 V3 — Care Extensions & Platform Hardening
 *Physiotherapy, lab tests, reporting, and access-control hardening.*
@@ -139,7 +159,7 @@ Special thanks to the following mentors for their valuable guidance and technica
 | Name | LinkedIn |
 |---|---|
 | **AbdALlatif Hossni** | [linkedin.com/in/abdallatif-hossni](https://linkedin.com/in/abdallatif-hossni) |
-| **Omar Ahmed** | ADD_LINKEDIN_URL_HERE |
+
 
 ## 📄 License
 

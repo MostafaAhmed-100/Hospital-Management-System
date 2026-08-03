@@ -1,11 +1,16 @@
-﻿using HospitalManagementSystem.Repository.SpecificRepositories.AppointmentRepository;
+﻿using HospitalManagementSystem.Repository.SpecificRepositories.AdmissionRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.AppointmentRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.BedRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.ClinicRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DepartmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DoctorRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.ErVisitRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InsuranceProviderRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InvoiceRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.MedicalRecordRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.MedicineRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.NurseAssignmentRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.NurseRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PatientRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PaymentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacyInventoryRepository;
@@ -13,14 +18,31 @@ using HospitalManagementSystem.Repository.SpecificRepositories.PharmacyRepositor
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacySaleRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PrescriptionItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PrescriptionRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.RoomRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SaleItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SpecialtyRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.StaffRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRecordRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryTeamRepository;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace HospitalManagementSystem.Repository.UnitofWork
 {
     public interface IUnitOfWork : IDisposable
     {
+        IAdmissionRepository Admissions { get; }
+        IBedRepository Beds { get; }
+        IRoomRepository Rooms { get; }
+        IErVisitRepository ErVisits { get; }
+
+        IOperatingRoomRepository OperatingRooms { get; }
+        ISurgeryRecordRepository SurgeryRecords { get; }
+        ISurgeryTeamRepository SurgeryTeams { get; }
+        IStaffRepository Staff { get; }
+        INurseRepository Nurses { get; }
+        INurseAssignmentRepository NurseAssignments { get; }
+
         ISaleItemRepository SaleItems { get; }
         IPrescriptionItemRepository PrescriptionItems { get; }
         IAppointmentRepository Appointments { get; }

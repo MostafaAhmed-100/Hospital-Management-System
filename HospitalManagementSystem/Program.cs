@@ -4,20 +4,11 @@ using HospitalManagementSystem.Data.Models;
 using HospitalManagementSystem.Filters;
 using HospitalManagementSystem.Middlewares;
 using HospitalManagementSystem.Repository.UnitofWork;
-using HospitalManagementSystem.Service.AppointmentService;
 using HospitalManagementSystem.Service.ClinicService;
 using HospitalManagementSystem.Service.DepartmentService;
 using HospitalManagementSystem.Service.DoctorService;
-using HospitalManagementSystem.Service.MedicalRecordService;
-using HospitalManagementSystem.Service.PatientService;
 using HospitalManagementSystem.Service.SpecialtyService;
 using HospitalManagementSystem.Service.MedicineService;
-using HospitalManagementSystem.Service.PharmacyService;
-using HospitalManagementSystem.Service.PharmacyInventoryService;
-using HospitalManagementSystem.Service.PharmacySaleService;
-using HospitalManagementSystem.Service.PrescriptionService;
-using HospitalManagementSystem.Service.PrescriptionItemService;
-using HospitalManagementSystem.Service.SaleItemService;
 using HospitalManagementSystem.Service.InsuranceProviderService;
 using HospitalManagementSystem.Service.InvoiceService;
 using HospitalManagementSystem.Service.PaymentService;
@@ -27,6 +18,15 @@ using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.RateLimiting;
+using HospitalManagementSystem.Service.OutpatientVisitsService.AppointmentService;
+using HospitalManagementSystem.Service.OutpatientVisitsService.MedicalRecordService;
+using HospitalManagementSystem.Service.OutpatientVisitsService.PatientService;
+using HospitalManagementSystem.Service.PharmacysService.PrescriptionItemService;
+using HospitalManagementSystem.Service.PharmacysService.PharmacyService;
+using HospitalManagementSystem.Service.PharmacysService.PharmacySaleService;
+using HospitalManagementSystem.Service.PharmacysService.PharmacyInventoryService;
+using HospitalManagementSystem.Service.PharmacysService.PrescriptionService;
+using HospitalManagementSystem.Service.PharmacysService.SaleItemService;
 
 namespace HospitalManagementSystem
 {

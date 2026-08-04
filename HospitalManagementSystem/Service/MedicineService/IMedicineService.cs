@@ -1,4 +1,4 @@
-﻿using HospitalManagementSystem.DTOs.MedicineDTOs;
+﻿using HospitalManagementSystem.DTOs.PharmacysDTOS.MedicineDTOs;
 using HospitalManagementSystem.DTOs.Shared;
 
 namespace HospitalManagementSystem.Service.MedicineService

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HospitalManagementSystem.Data.Models.Pharmacys;
-using HospitalManagementSystem.DTOs.MedicineDTOs;
+using HospitalManagementSystem.DTOs.PharmacysDTOS.MedicineDTOs;
 using HospitalManagementSystem.DTOs.Shared;
 using HospitalManagementSystem.Repository.UnitofWork;
 using Microsoft.Extensions.Logging;

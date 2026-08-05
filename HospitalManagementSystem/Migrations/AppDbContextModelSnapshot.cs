@@ -255,6 +255,10 @@ namespace HospitalManagementSystem.Migrations
                     b.Property<int>("DoctorType")
                         .HasColumnType("int");
 
+                    b.Property<string>("FullName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 

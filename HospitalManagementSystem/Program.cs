@@ -27,6 +27,16 @@ using HospitalManagementSystem.Service.PharmacysService.PharmacySaleService;
 using HospitalManagementSystem.Service.PharmacysService.PharmacyInventoryService;
 using HospitalManagementSystem.Service.PharmacysService.PrescriptionService;
 using HospitalManagementSystem.Service.PharmacysService.SaleItemService;
+using HospitalManagementSystem.Service.InpatientService.RoomService;
+using HospitalManagementSystem.Service.InpatientService.BedService;
+using HospitalManagementSystem.Service.InpatientService.AdmissionService;
+using HospitalManagementSystem.Service.SurgeryService.OperatingRoomService;
+using HospitalManagementSystem.Service.SurgeryService.SurgeryRecordService;
+using HospitalManagementSystem.Service.SurgeryService.SurgeryTeamService;
+using HospitalManagementSystem.Service.NursingStaffService.StaffService;
+using HospitalManagementSystem.Service.NursingStaffService.NurseService;
+using HospitalManagementSystem.Service.NursingStaffService.NurseAssignmentService;
+using HospitalManagementSystem.Service.EmergencyService.ErVisitService;
 
 namespace HospitalManagementSystem
 {
@@ -64,7 +74,7 @@ namespace HospitalManagementSystem
                 options.AddFixedWindowLimiter("Strict", opt =>
                 {
                     opt.Window = TimeSpan.FromMinutes(1);
-                    opt.PermitLimit = 15; 
+                    opt.PermitLimit = 15;
                     opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
                     opt.QueueLimit = 0;
                 });
@@ -76,6 +86,7 @@ namespace HospitalManagementSystem
                     await context.HttpContext.Response.WriteAsync("تم تجاوز الحد المسموح من الطلبات. يرجى المحاولة لاحقاً.", token);
                 };
             });
+
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddAutoMapper(cfg =>
                 cfg.AddMaps(Assembly.GetExecutingAssembly())
@@ -95,10 +106,19 @@ namespace HospitalManagementSystem
             builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
             builder.Services.AddScoped<IPrescriptionItemService, PrescriptionItemService>();
             builder.Services.AddScoped<ISaleItemService, SaleItemService>();
-
             builder.Services.AddScoped<IInsuranceProviderService, InsuranceProviderService>();
             builder.Services.AddScoped<IInvoiceService, InvoiceService>();
             builder.Services.AddScoped<IPaymentService, PaymentService>();
+            builder.Services.AddScoped<IRoomService, RoomService>();
+            builder.Services.AddScoped<IBedService, BedService>();
+            builder.Services.AddScoped<IAdmissionService, AdmissionService>();
+            builder.Services.AddScoped<IOperatingRoomService, OperatingRoomService>();
+            builder.Services.AddScoped<ISurgeryRecordService, SurgeryRecordService>();
+            builder.Services.AddScoped<ISurgeryTeamService, SurgeryTeamService>();
+            builder.Services.AddScoped<IStaffService, StaffService>();
+            builder.Services.AddScoped<INurseService, NurseService>();
+            builder.Services.AddScoped<INurseAssignmentService, NurseAssignmentService>();
+            builder.Services.AddScoped<IErVisitService, ErVisitService>();
 
             builder.Services.AddCors(options =>
             {
@@ -127,8 +147,9 @@ namespace HospitalManagementSystem
 
             if (app.Environment.IsDevelopment())
             {
-
+                
             }
+
             app.UseSwagger();
             app.UseSwaggerUI();
 

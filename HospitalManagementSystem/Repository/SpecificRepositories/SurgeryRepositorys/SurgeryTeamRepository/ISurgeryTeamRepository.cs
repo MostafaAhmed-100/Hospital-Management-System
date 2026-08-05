@@ -5,5 +5,6 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.SurgeryReposi
 {
     public interface ISurgeryTeamRepository : IGenericRepository<SurgeryTeam>
     {
+        Task<IEnumerable<SurgeryTeam>> GetTeamBySurgeryIdAsync(int surgeryId);
     }
 }

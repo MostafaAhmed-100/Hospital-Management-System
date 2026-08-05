@@ -11,7 +11,7 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 ## 📋 Table of Contents
 
 - [Features & Modules (V1)](#-features--modules-v1)
-- [V2 — In Progress](#-v2--in-progress)
+- [V2 — Hospital Operations](#-v2--hospital-operations)
 - [Architecture & Design Patterns](#️-architecture--design-patterns)
 - [Technology Stack](#️-technology-stack)
 - [Getting Started](#️-getting-started)
@@ -39,24 +39,22 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 - **Error Handling & Logging** — Centralized `ExceptionMiddleware` and structured, queryable logging powered by Serilog.
 - **API Documentation** — Swagger/OpenAPI UI fully configured and enabled for seamless testing.
 
-## 🏥 V2 — In Progress
+## 🏥 V2 — Hospital Operations
 
-> **🚧 V2 Status: Data layer complete.** Domain models, EF Core configurations, and repositories for hospital operations are in place. Service layer, DTOs, validation, and controllers are still to come.
+> **✅ V2 Status: Complete.** Inpatient admission, emergency, surgery, and nursing are fully implemented end to end — from domain models through Controllers — with the same production-grade layers as V1 (validation, logging, error handling, soft deletion).
 
-### ✅ Done so far
+### ✅ Completed in V2
 
-- **Domain Models** — `Admission`, `Bed`, `Room`, `ERVisit`, `Staff`, `Surgery`, plus supporting enums for statuses/roles.
-- **Fluent API Configuration** — `IEntityTypeConfiguration<T>` set for every new V2 entity.
-- **Repository & Unit of Work** — Repository pattern implemented for all new entities; `AppDbContext` and `UnitOfWork` updated to expose them.
-- **Nursing Module** — `Nurse` and `NurseAssignment` entities. Nurses modeled as a specialization of staff via a link to the `Staff` table; `NurseAssignment` tracks nurse coverage per shift, tied to either an `Admission` or an `ERVisit`. Both entities are configured via Fluent API, added to `AppDbContext`, and wired behind `UnitOfWork`.
-
-### 🚧 Still needed to close out V2
-
-- **DTOs & AutoMapper profiles** for the new entities.
-- **FluentValidation validators** for admission/ER/surgery/nursing business rules (e.g. bed conflict checks, OR overlap checks, triage-level constraints, shift assignment conflicts).
-- **Service layer** — business logic (e.g. "a bed can't hold two active admissions", "no overlapping surgeries per OR", triage-priority queueing).
-- **Controllers** — CRUD + workflow endpoints (admit patient, discharge, log ER visit, escalate to admission, schedule surgery, assign surgical team, assign nurse to shift).
-- **Migration** — EF Core migration for all new V2 tables.
+- **Domain Models** — `Admission`, `Bed`, `Room`, `ERVisit`, `Staff`, `Surgery`, `Nurse`, `NurseAssignment`, plus supporting enums for statuses/roles.
+- **Fluent API & Soft Deletion** — `IEntityTypeConfiguration<T>` for every V2 entity, with the same global `IsDeleted` query filters as V1.
+- **Repository & Unit of Work** — Repository interfaces/implementations for advanced queries, organized under dedicated sub-namespaces (`InpatientRepositorys`, `OutpatientVisitsRepository`, `PharmacysRepository`, `Nursing_StaffRepositorys`, `SurgeryRepository`), all wired behind `UnitOfWork`.
+- **Nursing Module** — `Nurse` modeled as a specialization of staff via a link to the `Staff` table; `NurseAssignment` tracks nurse coverage per shift, tied to either an `Admission` or an `ERVisit`.
+- **Service Layer & DTOs** — Full DTOs, AutoMapper profiles, and services for Inpatient, Nursing Staff, Surgery, and Emergency modules, following the same `ApiResponseDto`/paged-result pattern as V1.
+- **Validation** — FluentValidation validators for all new DTOs (e.g. bed/OR conflict rules, triage constraints, shift assignment rules).
+- **Controllers** — CRUD + workflow endpoints (admit patient, discharge, log ER visit, escalate to admission, schedule surgery, assign surgical team, assign nurse to shift), protected by the same rate limiting policies as V1.
+- **Namespace Reorganization** — DTOs, services, controllers, mappings, and validators regrouped into domain-specific namespaces (e.g. `OutpatientVisits`, `Pharmacys`) for clearer separation of concerns; DI in `Program.cs` updated to match.
+- **Doctor Model Update** — Added `FullName` to the `Doctor` entity/DTOs (with migration) and fixed related validation in `DoctorService`.
+- **API Documentation** — Swagger/OpenAPI enabled and covering all V2 endpoints.
 
 ## 🏗️ Architecture & Design Patterns
 
@@ -125,15 +123,7 @@ The project emphasizes maintainability, scalability, and testability through ent
 
 ## 🗺️ Roadmap — Planned Updates through V3
 
-V1 is complete and V2 data-layer work is underway. The plan is to finish V2, then move to V3, each a complete, demoable milestone on its own.
-
-### 🏥 V2 — Hospital Operations *(in progress — see above)*
-*Inpatient admission, emergency, surgery, and nursing.*
-
-- **🛏️ Inpatient Admission** — `Room`, `Bed`, `Admission`. A bed holds at most one active admission at a time; cost accrues daily and settles at discharge.
-- **🚑 Emergency (ER)** — `ERVisit` with a 5-level triage queue (priority first, arrival time second); can escalate directly into a full admission.
-- **🔪 Surgery** — `OperatingRoom`, `Surgery`, `SurgeryTeam`, `Staff`. No overlapping bookings per operating room; many-to-many surgical team with a role per participant.
-- **👩‍⚕️ Nursing** — `Nurse`, `NurseAssignment` ✅ *done*. Nurses modeled as a specialization of staff, with assignments tracked against admissions and ER visits per shift.
+V1 and V2 are both complete. V3 is the last version left before the full ERD scope is delivered.
 
 ### 🔮 V3 — Care Extensions & Platform Hardening
 *Physiotherapy, lab tests, reporting, and access-control hardening.*
@@ -159,7 +149,6 @@ Special thanks to the following mentors for their valuable guidance and technica
 | Name | LinkedIn |
 |---|---|
 | **AbdALlatif Hossni** | [linkedin.com/in/abdallatif-hossni](https://linkedin.com/in/abdallatif-hossni) |
-
 
 ## 📄 License
 

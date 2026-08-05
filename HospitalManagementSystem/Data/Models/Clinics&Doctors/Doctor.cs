@@ -7,6 +7,7 @@ namespace HospitalManagementSystem.Data.Models.Clinics_Doctors
     public class Doctor
     {
         public int Id { get; set; }
+        public string FullName { get; set; }
         public int DepartmentId { get; set; }
         public int SpecialtyId { get; set; }
         public bool IsDeleted { get; set; } = false;

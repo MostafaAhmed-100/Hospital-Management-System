@@ -5,5 +5,8 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
 {
     public interface INurseAssignmentRepository : IGenericRepository<NurseAssignment>
     {
+        Task<IEnumerable<NurseAssignment>> GetAssignmentsByNurseIdAsync(int nurseId);
+        Task<IEnumerable<NurseAssignment>> GetAssignmentsByAdmissionIdAsync(int admissionId);
+        Task<IEnumerable<NurseAssignment>> GetAssignmentsByErVisitIdAsync(int erVisitId);
     }
 }

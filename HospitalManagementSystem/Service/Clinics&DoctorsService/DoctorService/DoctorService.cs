@@ -83,9 +83,10 @@ namespace HospitalManagementSystem.Service.DoctorService
                 var department = await _unitOfWork.Departments.GetByIdAsync(dto.DepartmentId);
                 if (department == null) throw new KeyNotFoundException("The specified department does not exist.");
 
-                var specialty = await _unitOfWork.Specialties.GetByIdAsync(dto.SpecialtyId); // بافتراض إنك ضايف Specialties للـ UnitOfWork
+                var specialty = await _unitOfWork.Specialties.GetByIdAsync(dto.SpecialtyId);
                 if (specialty == null) throw new KeyNotFoundException("The specified specialty does not exist.");
-
+                if (!string.IsNullOrEmpty(dto.FullName))
+                    throw new KeyNotFoundException ("the doctor name Does not exist");
                 var doctor = _mapper.Map<Doctor>(dto);
                 await _unitOfWork.Doctors.AddAsync(doctor);
                 await _unitOfWork.SaveChangesAsync();

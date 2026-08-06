@@ -6,16 +6,18 @@
 ![Entity Framework Core](https://img.shields.io/badge/EF_Core-388E3C?style=for-the-badge&logo=nuget&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
 
-A robust, highly scalable backend API for managing comprehensive hospital operations. Built with **ASP.NET Core Web API** and clean architecture principles, the system handles everything from outpatient visits to pharmacy inventory and billing.
+A robust, highly scalable backend API for managing comprehensive hospital operations. Built with **ASP.NET Core Web API** and clean architecture principles, the system handles everything from outpatient visits to inpatient care, surgery, physiotherapy, pharmacy inventory, billing, and reporting.
+
+> **🎉 Project Status: Complete (V1 + V2 + V3).** Every module in the full ERD is implemented end to end — data layer, repositories, services, DTOs, validation, controllers, auth, and reporting.
 
 ## 📋 Table of Contents
 
 - [Features & Modules (V1)](#-features--modules-v1)
 - [V2 — Hospital Operations](#-v2--hospital-operations)
+- [V3 — Care Extensions & Platform Hardening](#-v3--care-extensions--platform-hardening)
 - [Architecture & Design Patterns](#️-architecture--design-patterns)
 - [Technology Stack](#️-technology-stack)
 - [Getting Started](#️-getting-started)
-- [Roadmap — Planned Updates through V3](#️-roadmap--planned-updates-through-v3)
 - [Contributors](#-contributors)
 - [Mentorship](#-mentorship)
 
@@ -56,19 +58,37 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 - **Doctor Model Update** — Added `FullName` to the `Doctor` entity/DTOs (with migration) and fixed related validation in `DoctorService`.
 - **API Documentation** — Swagger/OpenAPI enabled and covering all V2 endpoints.
 
+## 🔮 V3 — Care Extensions & Platform Hardening
+
+> **✅ V3 Status: Complete.** Physiotherapy, lab tests, reporting, JWT authentication, and access-control hardening are all fully implemented — closing out the full ERD scope across V1, V2, and V3.
+
+### ✅ Completed in V3
+
+- **Domain Models** — `Therapist`, `PhysioSession`, `LabTest`, plus the `LabTestStatus` enum; `ApplicationUser` extended to link with `Staff` and `Therapist`.
+- **Fluent API & Migrations** — `IEntityTypeConfiguration<T>` for all new entities, new `DbSet`s on `AppDbContext`, and migrations covering the new tables, relationships, and `AspNetUsers` columns.
+- **Repository & Unit of Work** — Repositories and interfaces for `Therapist`, `PhysioSession`, and `LabTest`, registered in `IUnitOfWork`/`UnitOfWork`.
+- **Service Layer & DTOs** — Full CRUD and query services, DTOs, and AutoMapper profiles for Lab Tests, Physiotherapy Sessions, and Therapists.
+- **Reporting & Dashboards** — Dedicated dashboard reporting controllers, services, and DTOs for occupancy, revenue, and staff-utilization queries.
+- **Validation** — FluentValidation for all new DTOs, with the same localized Arabic error messages used across V1/V2; `InvoiceStatus` enum extended to match new billing states.
+- **Authentication & API Docs** — JWT authentication configured end to end, with Swagger security and UI updated (custom title/version) to reflect the finished API surface.
+- **Access Control Hardening** — Authorization policies (`PatientOwnsRecord`, `DoctorOwnsAppointment`, `AdminWithinClinic`) defined and applied across every V1/V2/V3 endpoint, with an audit pass confirming no cross-patient or cross-clinic data leakage.
+- **Performance Tuning** — Query and indexing pass completed across the full, final schema (V1 + V2 + V3), including `AsNoTracking`/`AsSplitQuery` audits on the larger join-heavy queries introduced by reporting and inpatient modules.
+- **DTO & Route Cleanup** — Response DTOs trimmed of redundant fields (`DepartmentName`, `SpecialtyName`, `ClinicName`), `DoctorController` routes clarified, `Department.Description` made required, and `ClinicType` added to Clinic DTOs with validation.
+
 ## 🏗️ Architecture & Design Patterns
 
 The project emphasizes maintainability, scalability, and testability through enterprise-level design patterns, applied consistently across every layer:
 
 - **Clean Architecture Separation** — Strict boundaries between Controllers → Services → Repositories, each with a single responsibility and independently testable.
-- **Repository & Unit of Work Pattern** — `GenericRepository` handles standard CRUD to keep the codebase DRY, complemented by `SpecificRepositories` for complex domain queries (e.g. `Include`, `AsSplitQuery`). All repositories are wired behind `IUnitOfWork` so a single `SaveChanges` call commits multi-repository operations atomically. Repository interfaces/implementations now also cover the V2 entities (`Admission`, `Bed`, `Room`, `ERVisit`, `Staff`, `Surgery`), registered directly in `UnitOfWork`.
+- **Repository & Unit of Work Pattern** — `GenericRepository` handles standard CRUD to keep the codebase DRY, complemented by `SpecificRepositories` for complex domain queries (e.g. `Include`, `AsSplitQuery`). All repositories are wired behind `IUnitOfWork` so a single `SaveChanges` call commits multi-repository operations atomically, across every module from V1 through V3.
 - **Dependency Injection (DI)** — Fully decoupled architecture; controllers and services depend on interfaces (`IUnitOfWork`, service interfaces, repository interfaces) rather than concrete implementations.
 - **Service Layer & DTO Mapping** — Business logic lives in dedicated services, not controllers. AutoMapper profiles handle entity ↔ DTO transformation, including paged results and nested detail DTOs, all returned through a unified `ApiResponseDto` wrapper.
 - **Validation Pipeline** — A global `ValidationFilter` runs FluentValidation validators before a request reaches the service layer, short-circuiting invalid requests with structured, localized (Arabic) error messages instead of scattering `if` checks across controllers.
 - **Soft Deletion** — Every entity carries an `IsDeleted` flag enforced through EF Core global query filters, so deleted records are automatically excluded from queries without needing to filter manually at each call site.
 - **Global Exception Handling** — A centralized `ExceptionMiddleware` catches unhandled exceptions anywhere in the pipeline and converts them into consistent, structured error responses instead of leaking stack traces.
 - **Structured Logging** — Serilog is wired into the service layer and middleware, producing structured, queryable log events (rather than plain text) for easier debugging and monitoring in production.
-- **Performance Optimization** — Strategic use of `AsNoTracking`, `AsNoTrackingWithIdentityResolution`, and explicit query splitting (`AsSplitQuery`) to prevent Cartesian explosions and reduce memory overhead on read-heavy endpoints.
+- **Authentication & Authorization** — JWT-based authentication paired with policy-based authorization (`PatientOwnsRecord`, `DoctorOwnsAppointment`, `AdminWithinClinic`) enforced consistently across the entire API surface.
+- **Performance Optimization** — Strategic use of `AsNoTracking`, `AsNoTrackingWithIdentityResolution`, and explicit query splitting (`AsSplitQuery`) to prevent Cartesian explosions and reduce memory overhead on read-heavy endpoints, including the new reporting/dashboard queries.
 - **Rate Limiting** — Endpoint-level policies distinguish read traffic (Standard policy) from write traffic (Strict policy) to protect the API from abuse without throttling normal browsing.
 
 ## 🛠️ Technology Stack
@@ -80,7 +100,7 @@ The project emphasizes maintainability, scalability, and testability through ent
 | ORM | Entity Framework Core |
 | Database | Microsoft SQL Server |
 | Mapping & Validation | AutoMapper, FluentValidation |
-| Auth | ASP.NET Core Identity |
+| Auth | ASP.NET Core Identity, JWT |
 | Logging | Serilog |
 | API Docs | Swagger / OpenAPI |
 
@@ -115,24 +135,11 @@ The project emphasizes maintainability, scalability, and testability through ent
    ```powershell
    Update-Database
    ```
-   *(This automatically creates the `HospitalDB_V1` database and applies all schema tables, including the Soft Delete `IsDeleted` columns.)*
+   *(This automatically creates the database and applies all schema tables across V1, V2, and V3, including Soft Delete `IsDeleted` columns and the new `AspNetUsers` columns.)*
 
 4. **Run the application:**
 
-   Press `F5` in Visual Studio or run `dotnet run` in the CLI. Swagger UI launches automatically in development mode for easy API testing.
-
-## 🗺️ Roadmap — Planned Updates through V3
-
-V1 and V2 are both complete. V3 is the last version left before the full ERD scope is delivered.
-
-### 🔮 V3 — Care Extensions & Platform Hardening
-*Physiotherapy, lab tests, reporting, and access-control hardening.*
-
-- **🧘 Physiotherapy** — `Therapists`, `PhysioSessions`. Sessions are only ever created against a medical record that prescribes them.
-- **🧪 Lab Tests** — `LabTests`, ordered against a medical record, closing the loop from visit → diagnosis → test result.
-- **📊 Reporting & Dashboards** — Occupancy dashboards (beds/rooms/ORs) and revenue reports built as cross-cutting views over existing tables.
-- **🔐 Access Control Hardening** — Finalized role-based access: patients see only their own data, doctors see only their own patients, admins see everything within their clinic.
-- **⚡ Performance Tuning** — Query and indexing pass across the full schema once all modules are live.
+   Press `F5` in Visual Studio or run `dotnet run` in the CLI. Swagger UI launches automatically in development mode for easy API testing, with JWT auth configured in the Swagger security scheme.
 
 ## 👥 Contributors
 

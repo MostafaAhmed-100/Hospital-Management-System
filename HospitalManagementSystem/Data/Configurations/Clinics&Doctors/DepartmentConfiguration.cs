@@ -21,6 +21,7 @@ namespace HospitalManagementSystem.Data.Configurations.Clinics_Doctors
                    .WithOne(doc => doc.Department)
                    .HasForeignKey(doc => doc.DepartmentId)
                    .OnDelete(DeleteBehavior.Restrict);
+            builder.Property(d => d.Description).IsRequired();
         }
     }
 }

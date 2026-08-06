@@ -17,21 +17,21 @@ namespace HospitalManagementSystem.Controllers
             _doctorService = doctorService;
         }
 
-        [HttpGet]
+        [HttpGet("GetAll-Doctor")]
         public async Task<IActionResult> GetAll([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
         {
             var result = await _doctorService.GetAllDoctorsAsync(pageNumber, pageSize);
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("GetById-Doctor-{id}")]
         public async Task<IActionResult> GetById(int id)
         {
             var result = await _doctorService.GetDoctorByIdAsync(id);
             return Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("Creat-Doctor")]
         [EnableRateLimiting("Strict")]
         public async Task<IActionResult> Create([FromBody] CreateDoctorDto dto)
         {
@@ -39,7 +39,7 @@ namespace HospitalManagementSystem.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("Update-Doctor")]
         [EnableRateLimiting("Strict")]
         public async Task<IActionResult> Update([FromBody] UpdateDoctorDto dto)
         {
@@ -47,7 +47,7 @@ namespace HospitalManagementSystem.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("Delete-Doctor-{id}")]
         [EnableRateLimiting("Strict")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -41,6 +41,10 @@ using HospitalManagementSystem.Service.LabTestService;
 using HospitalManagementSystem.Service.PhysiotherapyService.TherapistService;
 using HospitalManagementSystem.Service.PhysiotherapyService.PhysioSessionService;
 using HospitalManagementSystem.Service.ReportingService;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.OpenApi.Models;
 
 namespace HospitalManagementSystem
 {
@@ -64,6 +68,24 @@ namespace HospitalManagementSystem
             })
             .AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
+
+            builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"] ?? "SuperSecretKeyForHospitalManagementSystem12345!")),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
             builder.Services.AddRateLimiter(options =>
             {
@@ -149,7 +171,38 @@ namespace HospitalManagementSystem
             });
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("V3", new OpenApiInfo { Title = "Hospital Management System API", Version = "V3" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "الرجاء إدخال التوكن بالصيغة التالية: Bearer {your_token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
+            });
 
             var app = builder.Build();
 
@@ -159,7 +212,12 @@ namespace HospitalManagementSystem
             }
 
             app.UseSwagger();
-            app.UseSwaggerUI();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/V3/swagger.json", "Hospital Management System API V3");
+                c.RoutePrefix = string.Empty;
+            });
 
             app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();

@@ -4,6 +4,7 @@
     {
         General,
         Specialized,
-        Dental
+        Dental,
+        Physiotherapy 
     }
 }

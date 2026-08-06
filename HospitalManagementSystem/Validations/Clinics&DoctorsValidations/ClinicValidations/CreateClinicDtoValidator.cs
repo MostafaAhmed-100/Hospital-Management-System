@@ -15,6 +15,9 @@ namespace HospitalManagementSystem.Validations.ClinicValidations
             RuleFor(x => x.DepartmentId)
                 .NotEmpty().WithMessage("رقم القسم مطلوب.")
                 .GreaterThan(0).WithMessage("رقم القسم غير صحيح.");
+
+            RuleFor(x => x.ClinicType).IsInEnum().WithMessage(" نوع العياده غير صالح")
+                .NotNull().WithMessage("نوع العياده مطلوب");
         }
     }
 }

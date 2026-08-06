@@ -9,8 +9,7 @@ namespace HospitalManagementSystem.Mappings.NursingStaffProfiles
         public StaffProfile()
         {
             CreateMap<Staff, StaffResponseDto>()
-                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()))
-                .ForMember(dest => dest.ClinicName, opt => opt.MapFrom(src => src.Clinic != null ? src.Clinic.Name : string.Empty));
+                .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role.ToString()));
 
             CreateMap<CreateStaffDto, Staff>();
             CreateMap<UpdateStaffDto, Staff>();

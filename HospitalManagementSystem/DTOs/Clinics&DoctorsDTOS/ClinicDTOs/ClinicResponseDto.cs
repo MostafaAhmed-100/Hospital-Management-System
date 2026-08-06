@@ -1,4 +1,6 @@
-﻿namespace HospitalManagementSystem.DTOs.ClinicDTOs
+﻿using HospitalManagementSystem.Data.Models.Enums;
+
+namespace HospitalManagementSystem.DTOs.ClinicDTOs
 {
     public class ClinicResponseDto
     {
@@ -6,5 +8,6 @@
         public string Name { get; set; }
         public string Department { get; set; }
         public int DepartmentId { get; set; }
+        public ClinicType ClinicType { get; set; }
     }
 }

@@ -37,6 +37,10 @@ using HospitalManagementSystem.Service.NursingStaffService.StaffService;
 using HospitalManagementSystem.Service.NursingStaffService.NurseService;
 using HospitalManagementSystem.Service.NursingStaffService.NurseAssignmentService;
 using HospitalManagementSystem.Service.EmergencyService.ErVisitService;
+using HospitalManagementSystem.Service.LabTestService;
+using HospitalManagementSystem.Service.PhysiotherapyService.TherapistService;
+using HospitalManagementSystem.Service.PhysiotherapyService.PhysioSessionService;
+using HospitalManagementSystem.Service.ReportingService;
 
 namespace HospitalManagementSystem
 {
@@ -119,6 +123,10 @@ namespace HospitalManagementSystem
             builder.Services.AddScoped<INurseService, NurseService>();
             builder.Services.AddScoped<INurseAssignmentService, NurseAssignmentService>();
             builder.Services.AddScoped<IErVisitService, ErVisitService>();
+            builder.Services.AddScoped<ILabTestService, LabTestService>();
+            builder.Services.AddScoped<ITherapistService, TherapistService>();
+            builder.Services.AddScoped<IPhysioSessionService, PhysioSessionService>();
+            builder.Services.AddScoped<IReportingService, ReportingService>();
 
             builder.Services.AddCors(options =>
             {
@@ -147,7 +155,7 @@ namespace HospitalManagementSystem
 
             if (app.Environment.IsDevelopment())
             {
-                
+
             }
 
             app.UseSwagger();

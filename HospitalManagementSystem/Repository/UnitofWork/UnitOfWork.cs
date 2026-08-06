@@ -1,5 +1,6 @@
 ﻿using HospitalManagementSystem.Data;
 using HospitalManagementSystem.Repository.SpecificRepositories.ClinicRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.DashboardRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DepartmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DoctorRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.EmergencyRepositorys.ErVisitRepository;
@@ -40,6 +41,7 @@ namespace HospitalManagementSystem.Repository.UnitofWork
         public IAdmissionRepository Admissions { get; private set; }
         public IBedRepository Beds { get; private set; }
         public IRoomRepository Rooms { get; private set; }
+        public IDashboardRepository Dashboards { get; private set; }
         public IErVisitRepository ErVisits { get; private set; }
         public ILabTestRepository LabTests { get; private set; }
         public ITherapistRepository Therapists { get; private set; }
@@ -50,7 +52,6 @@ namespace HospitalManagementSystem.Repository.UnitofWork
         public IStaffRepository Staff { get; private set; }
         public INurseRepository Nurses { get; private set; }
         public INurseAssignmentRepository NurseAssignments { get; private set; }
-
         public ISaleItemRepository SaleItems { get; private set; }
         public IPrescriptionItemRepository PrescriptionItems { get; private set; }
         public IAppointmentRepository Appointments { get; private set; }
@@ -103,6 +104,7 @@ namespace HospitalManagementSystem.Repository.UnitofWork
             LabTests = new LabTestRepository(_context);
             Therapists = new TherapistRepository(_context);
             PhysioSessions = new PhysioSessionRepository(_context);
+            Dashboards = new DashboardRepository(_context);
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()

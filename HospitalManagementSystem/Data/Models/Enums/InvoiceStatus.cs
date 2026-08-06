@@ -4,6 +4,7 @@
     {
         Paid,
         PartiallyPaid,
-        Unpaid
+        Unpaid,
+        Pending
     }
 }

@@ -1,4 +1,5 @@
 ﻿using HospitalManagementSystem.Repository.SpecificRepositories.ClinicRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.DashboardRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DepartmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.DoctorRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.EmergencyRepositorys.ErVisitRepository;
@@ -38,7 +39,7 @@ namespace HospitalManagementSystem.Repository.UnitofWork
         IBedRepository Beds { get; }
         IRoomRepository Rooms { get; }
         IErVisitRepository ErVisits { get; }
-
+        IDashboardRepository Dashboards { get; }
         IOperatingRoomRepository OperatingRooms { get; }
         ISurgeryRecordRepository SurgeryRecords { get; }
         ISurgeryTeamRepository SurgeryTeams { get; }

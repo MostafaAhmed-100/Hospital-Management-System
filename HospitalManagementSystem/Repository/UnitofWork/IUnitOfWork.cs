@@ -7,6 +7,7 @@ using HospitalManagementSystem.Repository.SpecificRepositories.InpatientReposito
 using HospitalManagementSystem.Repository.SpecificRepositories.InpatientRepositorys.RoomRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InsuranceProviderRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InvoiceRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.LabTestRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.NurseAssignmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.NurseRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.StaffRepository;
@@ -21,6 +22,8 @@ using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysReposito
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.PrescriptionItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.PrescriptionRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.SaleItemRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PhysiotherapyRepositorys.PhysioSessionRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PhysiotherapyRepositorys.TherapistRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SpecialtyRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRepository.OperatingRoomRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRepository.SurgeryRecordRepository;
@@ -42,7 +45,9 @@ namespace HospitalManagementSystem.Repository.UnitofWork
         IStaffRepository Staff { get; }
         INurseRepository Nurses { get; }
         INurseAssignmentRepository NurseAssignments { get; }
-
+        ILabTestRepository LabTests { get; }
+        ITherapistRepository Therapists { get; }
+        IPhysioSessionRepository PhysioSessions { get; }
         ISaleItemRepository SaleItems { get; }
         IPrescriptionItemRepository PrescriptionItems { get; }
         IAppointmentRepository Appointments { get; }

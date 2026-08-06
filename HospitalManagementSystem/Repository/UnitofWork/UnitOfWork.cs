@@ -8,6 +8,7 @@ using HospitalManagementSystem.Repository.SpecificRepositories.InpatientReposito
 using HospitalManagementSystem.Repository.SpecificRepositories.InpatientRepositorys.RoomRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InsuranceProviderRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.InvoiceRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.LabTestRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.NurseAssignmentRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.NurseRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.Nursing_StaffRepositorys.StaffRepository;
@@ -22,6 +23,8 @@ using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysReposito
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.PrescriptionItemRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.PrescriptionRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepository.SaleItemRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PhysiotherapyRepositorys.PhysioSessionRepository;
+using HospitalManagementSystem.Repository.SpecificRepositories.PhysiotherapyRepositorys.TherapistRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SpecialtyRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRepository.OperatingRoomRepository;
 using HospitalManagementSystem.Repository.SpecificRepositories.SurgeryRepository.SurgeryRecordRepository;
@@ -38,7 +41,9 @@ namespace HospitalManagementSystem.Repository.UnitofWork
         public IBedRepository Beds { get; private set; }
         public IRoomRepository Rooms { get; private set; }
         public IErVisitRepository ErVisits { get; private set; }
-
+        public ILabTestRepository LabTests { get; private set; }
+        public ITherapistRepository Therapists { get; private set; }
+        public IPhysioSessionRepository PhysioSessions { get; private set; }
         public IOperatingRoomRepository OperatingRooms { get; private set; }
         public ISurgeryRecordRepository SurgeryRecords { get; private set; }
         public ISurgeryTeamRepository SurgeryTeams { get; private set; }
@@ -95,6 +100,9 @@ namespace HospitalManagementSystem.Repository.UnitofWork
             Staff = new StaffRepository(_context);
             Nurses = new NurseRepository(_context);
             NurseAssignments = new NurseAssignmentRepository(_context);
+            LabTests = new LabTestRepository(_context);
+            Therapists = new TherapistRepository(_context);
+            PhysioSessions = new PhysioSessionRepository(_context);
         }
 
         public async Task<IDbContextTransaction> BeginTransactionAsync()

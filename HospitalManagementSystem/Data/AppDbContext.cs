@@ -3,9 +3,11 @@ using HospitalManagementSystem.Data.Models.Billing_Insurance;
 using HospitalManagementSystem.Data.Models.Clinics_Doctors;
 using HospitalManagementSystem.Data.Models.Emergency;
 using HospitalManagementSystem.Data.Models.Inpatient;
+using HospitalManagementSystem.Data.Models.LabTests;
 using HospitalManagementSystem.Data.Models.Nursing_Staff;
 using HospitalManagementSystem.Data.Models.OutpatientVisits;
 using HospitalManagementSystem.Data.Models.Pharmacys;
+using HospitalManagementSystem.Data.Models.Physiotherapy;
 using HospitalManagementSystem.Data.Models.Surgery;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -20,6 +22,9 @@ namespace HospitalManagementSystem.Data
 
         public DbSet<Clinic> Clinics { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Therapist> Therapists { get; set; }
+        public DbSet<PhysioSession> PhysioSessions { get; set; }
+        public DbSet<LabTest> LabTests  { get; set; }
         public DbSet<Specialty> Specialties { get; set; }
         public DbSet<Doctor> Doctors { get; set; }
         public DbSet<Patient> Patients { get; set; }

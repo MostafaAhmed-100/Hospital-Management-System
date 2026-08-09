@@ -1,4 +1,5 @@
 ﻿using HospitalManagementSystem.Data;
+using HospitalManagementSystem.Data.Models.Enums;
 using HospitalManagementSystem.Data.Models.OutpatientVisits;
 using HospitalManagementSystem.Repository.GenericRepository;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,26 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.OutpatientVis
             var Conflict = await _AppDbcontext.Appointments
                 .AnyAsync(x => x.DoctorId == doctorId && x.AppointmentDate == requestedTime);
             return Conflict;
+        }
+        public async Task<IEnumerable<(AppointmentStatus Status, int Count)>> GetAppointmentsDistributionByStatusAsync()
+        {
+            var distribution = await _AppDbcontext.Appointments
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Status)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Status, x.Count));
+        }
+        public async Task<int> GetTodayAppointmentsCountAsync()
+        {
+            var today = DateTime.Today;
+
+            var count = await _AppDbcontext.Appointments
+                .Where(x => !x.IsDeleted && x.AppointmentDate.Date == today)
+                .CountAsync();
+
+            return count;
         }
     }
 }

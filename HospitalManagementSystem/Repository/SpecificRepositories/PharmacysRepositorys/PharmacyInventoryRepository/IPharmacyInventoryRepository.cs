@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
     public interface IPharmacyInventoryRepository : IGenericRepository<PharmacyInventory>
     {
         Task<PharmacyInventory?> CheckMedicineStockAsync(int pharmacyId, int medicineId);
+        Task<IEnumerable<(string MedicineName, string PharmacyName, DateTime ExpiryDate, int Quantity)>> GetExpiringSoonMedicinesAsync();
+        Task<IEnumerable<(string MedicineName, string PharmacyName, int Quantity)>> GetLowStockMedicinesAsync();
     }
 }

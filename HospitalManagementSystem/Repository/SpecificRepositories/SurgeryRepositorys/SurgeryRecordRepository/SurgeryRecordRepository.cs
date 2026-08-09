@@ -24,5 +24,25 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.SurgeryReposi
                 (endTime > s.StartTime && endTime <= s.EndTime) ||
                 (startTime <= s.StartTime && endTime >= s.EndTime));
         }
+        public async Task<IEnumerable<(string SurgeryType, int Count)>> GetTopSurgeryTypesAsync()
+        {
+            var topSurgeries = await _AppDbcontext.SurgeryRecords
+                .GroupBy(x => x.SurgeryType)
+                .Select(g => new { SurgeryType = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topSurgeries.Select(x => (x.SurgeryType, x.Count));
+        }
+        public async Task<IEnumerable<(SurgeryStatus Status, int Count)>> GetSurgeryStatusDistributionAsync()
+        {
+            var distribution = await _AppDbcontext.SurgeryRecords
+                .GroupBy(x => x.Status)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Status, x.Count));
+        }
     }
 }

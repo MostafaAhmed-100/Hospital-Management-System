@@ -20,5 +20,39 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
 
             return Medicines;
         }
+        public async Task<IEnumerable<(string MedicineName, int SalesCount)>> GetTopSellingMedicinesAsync()
+        {
+            var topMedicines = await _AppDbcontext.Medicines
+                .Where(x => !x.IsDeleted)
+                .Select(m => new
+                {
+                    m.Name,
+                    SalesCount = m.SaleItems.Count()
+                })
+                .OrderByDescending(m => m.SalesCount)
+                .Take(5)
+                .ToListAsync();
+
+            return topMedicines.Select(x => (x.Name, x.SalesCount));
+        }
+
+        public async Task<IEnumerable<(string Category, int Count)>> GetMedicinePrescriptionDistributionAsync()
+        {
+            var prescriptionCount = await _AppDbcontext.Medicines
+                .Where(x => !x.IsDeleted && x.RequiresPrescription)
+                .CountAsync();
+
+            var otcCount = await _AppDbcontext.Medicines
+                .Where(x => !x.IsDeleted && !x.RequiresPrescription)
+                .CountAsync();
+
+            var result = new List<(string Category, int Count)>
+            {
+                ("Prescription Required", prescriptionCount),
+                ("OTC (Over The Counter)", otcCount)
+            };
+
+            return result;
+        }
     }
 }

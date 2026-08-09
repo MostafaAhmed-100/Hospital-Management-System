@@ -7,5 +7,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.DoctorReposit
     {
         Task<IEnumerable<Doctor?>> GetDoctorsBySpecialtyAsync(int specialtyId);
         Task<Doctor?> GetDoctorWithDepartmentAsync(int doctorId);
+        Task<IEnumerable<Doctor?>> GetTheMostDoctorsWithAppointmentsInDepartment(int departmentId);
+        Task<IEnumerable<Doctor?>> GetTheMostDoctorsWithAppointmentsInHospital();
     }
 }

@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
     public interface IPharmacyRepository : IGenericRepository<Pharmacy>
     {
         Task<Pharmacy?> GetPharmacyWithInventoryAsync(int pharmacyId);
+        Task<IEnumerable<(string PharmacyName, int InventoryCount)>> GetTopPharmaciesByInventorySizeAsync();
+        Task<IEnumerable<(string PharmacyName, int SalesCount)>> GetTopPharmaciesBySalesCountAsync();
     }
 }

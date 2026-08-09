@@ -18,5 +18,24 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.InpatientRepo
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<int> GetAvailableBedsCountAsync()
+        {
+            var count = await _AppDbcontext.Beds
+                .Where(x => x.Status == BedStatus.Available && !x.IsDeleted)
+                .CountAsync();
+
+            return count;
+        }
+
+        public async Task<Dictionary<BedStatus, int>> GetBedsDistributionByStatusAsync()
+        {
+            var distribution = await _AppDbcontext.Beds
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Status)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(k => k.Status, v => v.Count);
+
+            return distribution;
+        }
     }
 }

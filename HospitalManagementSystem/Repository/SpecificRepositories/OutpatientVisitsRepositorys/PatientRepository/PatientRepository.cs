@@ -21,5 +21,38 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.OutpatientVis
                 .FirstOrDefaultAsync(x => x.Id == patientId);
             return Patient;
         }
+        public async Task<IEnumerable<(string Category, int Count)>> GetPatientInsuranceDistributionAsync()
+        {
+            var insuredCount = await _AppDbcontext.Patients
+                .Where(x => !x.IsDeleted && x.InsuranceId != null)
+                .CountAsync();
+
+            var nonInsuredCount = await _AppDbcontext.Patients
+                .Where(x => !x.IsDeleted && x.InsuranceId == null)
+                .CountAsync();
+
+            var result = new List<(string Category, int Count)>
+            {
+                ("Insured", insuredCount),
+                ("Non-Insured", nonInsuredCount)
+            };
+
+            return result;
+        }
+        public async Task<IEnumerable<(string PatientName, int AppointmentsCount)>> GetTopFrequentPatientsAsync()
+        {
+            var topPatients = await _AppDbcontext.Patients
+                .Where(x => !x.IsDeleted)
+                .Select(p => new
+                {
+                    p.FullName,
+                    AppointmentsCount = p.Appointments.Count(a => !a.IsDeleted)
+                })
+                .OrderByDescending(p => p.AppointmentsCount)
+                .Take(5)
+                .ToListAsync();
+
+            return topPatients.Select(x => (x.FullName, x.AppointmentsCount));
+        }
     }
 }

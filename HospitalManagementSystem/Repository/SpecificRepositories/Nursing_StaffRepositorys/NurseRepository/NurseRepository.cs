@@ -24,5 +24,27 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<(ShiftType Shift, int Count)>> GetNursesDistributionByShiftAsync()
+        {
+            var distribution = await _AppDbcontext.Nurses
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Shift)
+                .Select(g => new { Shift = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Shift, x.Count));
+        }
+        public async Task<IEnumerable<(string WardSpecialization, int Count)>> GetTopWardSpecializationsAsync()
+        {
+            var topWards = await _AppDbcontext.Nurses
+                .Where(x => !x.IsDeleted && !string.IsNullOrEmpty(x.WardSpecialization))
+                .GroupBy(x => x.WardSpecialization)
+                .Select(g => new { WardSpecialization = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topWards.Select(x => (x.WardSpecialization, x.Count));
+        }
     }
 }

@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.ClinicReposit
     public interface IClinicRepository : IGenericRepository<Clinic>
     {
         Task<IEnumerable<Clinic?>> GetClinicsByDepartmentAsync(int departmentId);
+        Task<IEnumerable<Clinic?>> GetTheMostClinicsWithAppointmentInDepartment(int departmentId);
+        Task<IEnumerable<Clinic?>> GetTheMostClinicsWithAppointmentInHospital();
     }
 }

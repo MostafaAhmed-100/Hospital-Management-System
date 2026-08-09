@@ -21,5 +21,21 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
 
             return items;
         }
+        public async Task<IEnumerable<(string MedicineName, decimal TotalRevenue)>> GetTopRevenueGeneratingMedicinesAsync()
+        {
+            var topMedicines = await _AppDbcontext.SaleItems
+                .Include(x => x.Medicine)
+                .GroupBy(x => x.Medicine.Name)
+                .Select(g => new
+                {
+                    MedicineName = g.Key,
+                    TotalRevenue = g.Sum(s => s.Quantity * s.UnitPrice)
+                })
+                .OrderByDescending(m => m.TotalRevenue)
+                .Take(5)
+                .ToListAsync();
+
+            return topMedicines.Select(x => (x.MedicineName, x.TotalRevenue));
+        }
     }
 }

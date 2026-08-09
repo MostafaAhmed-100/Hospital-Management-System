@@ -8,5 +8,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
     {
         Task<IEnumerable<Nurse>> GetNursesByShiftAsync(ShiftType shift);
         Task<IEnumerable<Nurse>> GetNursesByWardAsync(string wardSpecialization);
+        Task<IEnumerable<(ShiftType Shift, int Count)>> GetNursesDistributionByShiftAsync();
+        Task<IEnumerable<(string WardSpecialization, int Count)>> GetTopWardSpecializationsAsync();
     }
 }

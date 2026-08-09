@@ -26,5 +26,29 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<(StaffRole Role, int Count)>> GetStaffDistributionByRoleAsync()
+        {
+            var distribution = await _AppDbcontext.Staff
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Role)
+                .Select(g => new { Role = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Role, x.Count));
+        }
+
+        public async Task<IEnumerable<(string ClinicName, int Count)>> GetTopClinicsByStaffCountAsync()
+        {
+            var topClinics = await _AppDbcontext.Staff
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Clinic)
+                .GroupBy(x => x.Clinic.Name)
+                .Select(g => new { ClinicName = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topClinics.Select(x => (x.ClinicName, x.Count));
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using HospitalManagementSystem.Data.Models.Nursing_Staff;
+﻿using HospitalManagementSystem.Data.Models.Enums;
+using HospitalManagementSystem.Data.Models.Nursing_Staff;
 using HospitalManagementSystem.Repository.GenericRepository;
 using Microsoft.EntityFrameworkCore;
 
@@ -37,6 +38,30 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
                 .Where(n => n.ErVisitId == erVisitId)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+        public async Task<IEnumerable<(string LicenseNumber, int Count)>> GetTopAssignedNursesAsync()
+        {
+            var topNurses = await _AppDbcontext.NurseAssignments
+                .Where(x => !x.IsDeleted)
+                .Include(x => x.Nurse)
+                .GroupBy(x => x.Nurse.LicenseNumber)
+                .Select(g => new { LicenseNumber = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topNurses.Select(x => (x.LicenseNumber, x.Count));
+        }
+
+        public async Task<IEnumerable<(ShiftType Shift, int Count)>> GetAssignmentsDistributionByShiftAsync()
+        {
+            var distribution = await _AppDbcontext.NurseAssignments
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Shift)
+                .Select(g => new { Shift = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Shift, x.Count));
         }
     }
 }

@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
     public interface IMedicineRepository : IGenericRepository<Medicine>
     {
         Task<IEnumerable<Medicine?>> SearchMedicinesByNameAsync(string name);
+        Task<IEnumerable<(string MedicineName, int SalesCount)>> GetTopSellingMedicinesAsync();
+        Task<IEnumerable<(string Category, int Count)>> GetMedicinePrescriptionDistributionAsync();
     }
 }

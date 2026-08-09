@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.OutpatientVis
     public interface IMedicalRecordRepository : IGenericRepository<MedicalRecord>
     {
         Task<IEnumerable<MedicalRecord?>> GetRecordsByPatientIdAsync(int patientId);
+        Task<IEnumerable<(string Diagnosis, int Count)>> GetTopDiagnosesAsync();
+        Task<int> GetTodayMedicalRecordsCountAsync();
     }
 }

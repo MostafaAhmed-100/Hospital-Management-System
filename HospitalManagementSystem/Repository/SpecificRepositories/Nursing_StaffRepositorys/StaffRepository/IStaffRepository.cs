@@ -8,5 +8,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Nursing_Staff
     {
         Task<IEnumerable<Staff>> GetStaffByClinicIdAsync(int clinicId);
         Task<IEnumerable<Staff>> GetStaffByRoleAsync(StaffRole role);
+        Task<IEnumerable<(string ClinicName, int Count)>> GetTopClinicsByStaffCountAsync();
+        Task<IEnumerable<(StaffRole Role, int Count)>> GetStaffDistributionByRoleAsync();
     }
 }

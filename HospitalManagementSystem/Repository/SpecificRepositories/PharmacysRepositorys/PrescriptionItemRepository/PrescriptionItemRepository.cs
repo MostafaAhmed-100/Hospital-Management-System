@@ -1,4 +1,5 @@
 ﻿using HospitalManagementSystem.Data;
+using HospitalManagementSystem.Data.Models.Enums;
 using HospitalManagementSystem.Data.Models.Pharmacys;
 using HospitalManagementSystem.Repository.GenericRepository;
 using Microsoft.EntityFrameworkCore;

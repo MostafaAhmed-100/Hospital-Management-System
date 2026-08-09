@@ -6,5 +6,7 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Physiotherapy
     public interface ITherapistRepository : IGenericRepository<Therapist>
     {
         Task<IEnumerable<Therapist>> GetTherapistsByDepartmentIdAsync(int departmentId);
+        Task<IEnumerable<(string TherapistName, int SessionsCount)>> GetTopActiveTherapistsAsync();
+        Task<IEnumerable<(string Specialization, int Count)>> GetTherapistSpecializationDistributionAsync();
     }
 }

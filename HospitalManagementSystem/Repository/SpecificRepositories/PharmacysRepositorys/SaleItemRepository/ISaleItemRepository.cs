@@ -6,5 +6,6 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.PharmacysRepo
     public interface ISaleItemRepository : IGenericRepository<SaleItem>
     {
         Task<IEnumerable<SaleItem>> GetItemsBySaleIdAsync(int saleId);
+        Task<IEnumerable<(string MedicineName, decimal TotalRevenue)>> GetTopRevenueGeneratingMedicinesAsync();
     }
 }

@@ -19,5 +19,28 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.ClinicReposit
                 .ToListAsync();
             return Clinics;
         }
+
+        public async Task<IEnumerable<Clinic?>> GetTheMostClinicsWithAppointmentInDepartment(int departmentId)
+        {
+            var Clinics = await _AppDbcontext.Clinics
+                .Where(x => x.DepartmentId == departmentId)
+                .AsNoTrackingWithIdentityResolution()
+                .OrderByDescending(x => x.Appointments.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return Clinics;
+        }
+
+        public async Task<IEnumerable<Clinic?>> GetTheMostClinicsWithAppointmentInHospital()
+        {
+            var Clinics = await _AppDbcontext.Clinics
+               .AsNoTrackingWithIdentityResolution()
+               .OrderByDescending(x => x.Appointments.Count)
+               .Take(5)
+               .ToListAsync();
+
+            return Clinics;
+        }
     }
 }

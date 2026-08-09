@@ -24,5 +24,28 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.LabTestReposi
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<(LabTestStatus Status, int Count)>> GetLabTestStatusDistributionAsync()
+        {
+            var distribution = await _AppDbcontext.LabTests
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.Status)
+                .Select(g => new { Status = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Status, x.Count));
+        }
+        
+        public async Task<IEnumerable<(string TestName, int Count)>> GetTopRequestedLabTestsAsync()
+        {
+            var topTests = await _AppDbcontext.LabTests
+                .Where(x => !x.IsDeleted)
+                .GroupBy(x => x.TestName)
+                .Select(g => new { TestName = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topTests.Select(x => (x.TestName, x.Count));
+        }
     }
 }

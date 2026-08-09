@@ -17,5 +17,30 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Physiotherapy
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<(string TherapistName, int SessionsCount)>> GetTopActiveTherapistsAsync()
+        {
+            var topTherapists = await _AppDbcontext.Therapists
+                .Where(x => !x.IsDeleted)
+                .Select(t => new
+                {
+                    t.FullName,
+                    SessionsCount = t.PhysioSessions.Count() 
+                })
+                .OrderByDescending(t => t.SessionsCount)
+                .Take(5)
+                .ToListAsync();
+
+            return topTherapists.Select(x => (x.FullName, x.SessionsCount));
+        }
+        public async Task<IEnumerable<(string Specialization, int Count)>> GetTherapistSpecializationDistributionAsync()
+        {
+            var distribution = await _AppDbcontext.Therapists
+                .Where(x => !x.IsDeleted && !string.IsNullOrEmpty(x.Specialization))
+                .GroupBy(x => x.Specialization)
+                .Select(g => new { Specialization = g.Key, Count = g.Count() })
+                .ToListAsync();
+
+            return distribution.Select(x => (x.Specialization, x.Count));
+        }
     }
 }

@@ -30,5 +30,28 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.DoctorReposit
                 .FirstOrDefaultAsync(x => x.Id == doctorId);
             return Doctor;
         }
+
+        public async Task<IEnumerable<Doctor?>> GetTheMostDoctorsWithAppointmentsInDepartment(int departmentId)
+        {
+            var Doctors = await _AppDbcontext.Doctors
+                .Where(x => x.DepartmentId == departmentId)
+                .AsNoTrackingWithIdentityResolution()
+                .OrderByDescending(x => x.Appointments.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return Doctors;
+        }
+
+        public async Task<IEnumerable<Doctor?>> GetTheMostDoctorsWithAppointmentsInHospital()
+        {
+            var Doctors = await _AppDbcontext.Doctors
+             .AsNoTrackingWithIdentityResolution()
+             .OrderByDescending(x => x.Appointments.Count)
+             .Take(5)
+             .ToListAsync();
+
+            return Doctors;
+        }
     }
 }

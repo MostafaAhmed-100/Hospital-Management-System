@@ -69,6 +69,7 @@ A robust, highly scalable backend API for managing comprehensive hospital operat
 - **Repository & Unit of Work** — Repositories and interfaces for `Therapist`, `PhysioSession`, and `LabTest`, registered in `IUnitOfWork`/`UnitOfWork`.
 - **Service Layer & DTOs** — Full CRUD and query services, DTOs, and AutoMapper profiles for Lab Tests, Physiotherapy Sessions, and Therapists.
 - **Reporting & Dashboards** — Dedicated dashboard reporting controllers, services, and DTOs for occupancy, revenue, and staff-utilization queries.
+- **Advanced Statistics Layer** — DTOs, services, repositories, and controllers for cross-domain statistics (clinics, doctors, ER, inpatient, lab, nursing, outpatient, pharmacy, physiotherapy, surgery, and more), exposing endpoints for top entities, distributions, and counts — all standardized through `ApiResponseDto`.
 - **Validation** — FluentValidation for all new DTOs, with the same localized Arabic error messages used across V1/V2; `InvoiceStatus` enum extended to match new billing states.
 - **Authentication & API Docs** — JWT authentication configured end to end, with Swagger security and UI updated (custom title/version) to reflect the finished API surface.
 - **Access Control Hardening** — Authorization policies (`PatientOwnsRecord`, `DoctorOwnsAppointment`, `AdminWithinClinic`) defined and applied across every V1/V2/V3 endpoint, with an audit pass confirming no cross-patient or cross-clinic data leakage.

@@ -35,5 +35,27 @@ namespace HospitalManagementSystem.Repository.SpecificRepositories.Physiotherapy
                 .AsNoTrackingWithIdentityResolution()
                 .ToListAsync();
         }
+        public async Task<IEnumerable<(string TherapyType, int Count)>> GetTopTherapyTypesAsync()
+        {
+            var topTherapies = await _AppDbcontext.PhysioSessions
+                .Where(x => !x.IsDeleted && !string.IsNullOrEmpty(x.TherapyType))
+                .GroupBy(x => x.TherapyType)
+                .Select(g => new { TherapyType = g.Key, Count = g.Count() })
+                .OrderByDescending(x => x.Count)
+                .Take(5)
+                .ToListAsync();
+
+            return topTherapies.Select(x => (x.TherapyType, x.Count));
+        }
+        public async Task<int> GetTodayPhysioSessionsCountAsync()
+        {
+            var today = DateTime.Today;
+
+            var count = await _AppDbcontext.PhysioSessions
+                .Where(x => !x.IsDeleted && x.SessionDate.Date == today)
+                .CountAsync();
+
+            return count;
+        }
     }
 }
